@@ -69,11 +69,12 @@ public class ParseStreamMetaData {
 		StreamMetaDataList list = new StreamMetaDataList();
 
 		try {
-			StreamingService youtube = NewPipe.getService("Youtube");
-			StreamExtractor  extractor = youtube.getStreamExtractorInstance(youtubeVideoUrl);
+			StreamingService youtube = NewPipe.getService("YouTube");
+			// Fixed by Edward
+			StreamExtractor  extractor = youtube.getStreamExtractor(youtubeVideoUrl);
 
 			// actual extraction
-			StreamInfo streamInfo = StreamInfo.getVideoInfo(extractor);
+			StreamInfo streamInfo = StreamInfo.getInfo(youtubeVideoUrl);
 
 			// if non critical exceptions happened during extraction they will be printed now
 			for(Throwable error : streamInfo.errors) {
