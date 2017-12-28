@@ -1,20 +1,28 @@
 package free.rm.skytube.gui.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.util.LruCache;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.style.MetricAffectingSpan;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,9 +33,9 @@ import java.util.List;
 
 import free.rm.skytube.R;
 import free.rm.skytube.businessobjects.db.BookmarksDb;
-import free.rm.skytube.gui.businessobjects.fragments.FragmentEx;
 import free.rm.skytube.gui.businessobjects.MainActivityListener;
 import free.rm.skytube.gui.businessobjects.SubsAdapter;
+import free.rm.skytube.gui.businessobjects.fragments.FragmentEx;
 
 public class MainFragment extends FragmentEx {
 	private RecyclerView				subsListView = null;
@@ -56,18 +64,28 @@ public class MainFragment extends FragmentEx {
 		Toolbar toolbar = view.findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
+		SpannableString title = new SpannableString("NewTube");
+		title.setSpan(new TypefaceSpan(getContext(), "JLSDataGothicC_NC.otf"),
+				0, title.length(),
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		final ActionBar actionBar = getSupportActionBar();
+
+		actionBar.setTitle(title);
+
 		// indicate that this fragment has an action bar menu
 		setHasOptionsMenu(true);
 
-		DrawerLayout subsDrawerLayout = view.findViewById(R.id.subs_drawer_layout);
+		final DrawerLayout subsDrawerLayout = view.findViewById(R.id.subs_drawer_layout);
 		subsDrawerToggle = new ActionBarDrawerToggle(
 						getActivity(),
 						subsDrawerLayout,
-						R.string.app_name,
-						R.string.app_name
-		);
+						R.drawable.ic_play_circle_outline_white_24dp,
+						R.string.app_name_1,
+						R.string.app_name_1);
+
+
 		subsDrawerToggle.setDrawerIndicatorEnabled(true);
-		final ActionBar actionBar = getSupportActionBar();
+
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setHomeButtonEnabled(true);
@@ -196,4 +214,46 @@ public class MainFragment extends FragmentEx {
 
 	}
 
+}
+
+class TypefaceSpan extends MetricAffectingSpan {
+
+	/** An <code>LruCache</code> for previously loaded typefaces. */
+	private static LruCache<String, Typeface> sTypefaceCache =
+			new LruCache<String, Typeface>(12);
+
+	private Typeface mTypeface;
+
+	/**
+	 * Load the {@link Typeface} and apply to a {@link Spannable}.
+	 */
+	public TypefaceSpan(Context context, String typefaceName) {
+		mTypeface = sTypefaceCache.get(typefaceName);
+
+		if (mTypeface == null) {
+			mTypeface = Typeface.createFromAsset(context.getApplicationContext()
+					.getAssets(), String.format("fonts/%s", typefaceName));
+
+			// Cache the loaded Typeface
+			sTypefaceCache.put(typefaceName, mTypeface);
+		}
+	}
+
+
+	@Override
+	public void updateMeasureState(TextPaint textPaint) {
+		textPaint.setTypeface(mTypeface);
+
+		// Note: This flag is required for proper typeface rendering
+		textPaint.setFlags(textPaint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG );
+
+	}
+
+	@Override
+	public void updateDrawState(TextPaint textPaint) {
+		textPaint.setTypeface(mTypeface);
+
+		// Note: This flag is required for proper typeface rendering
+		textPaint.setFlags(textPaint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+	}
 }

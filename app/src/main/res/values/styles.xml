@@ -16,6 +16,8 @@
 		<item name="textAppearanceSmallPopupMenu">@style/VideoOptionsTextAppearanceSmall</item>
 		<item name="android:textAppearanceSmallPopupMenu">@style/VideoOptionsTextAppearanceSmall</item>
 
+		<item name="homeAsUpIndicator">@drawable/ic_play_circle_outline_white_24dp</item>
+
 	</style>
 
 
