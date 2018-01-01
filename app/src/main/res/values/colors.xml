@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="colorPrimary">#263238</color>
-	<color name="colorPrimaryDark">#21272B</color>
-	<color name="colorAccent">#26A69A</color>
+	<color name="colorPrimary">#161d20</color>
+	<color name="colorPrimaryDark">#000000</color>
+	<color name="colorAccent">#68f10d</color>
 
 	<color name="skytube_theme_colour">#ff6600</color>
 
