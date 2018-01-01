@@ -17,6 +17,8 @@
 
 package free.rm.skytube.businessobjects;
 
+import android.util.Log;
+
 import java.util.Random;
 
 import free.rm.skytube.BuildConfig;
@@ -72,9 +74,11 @@ public class YouTubeAPIKey {
 			// else we are going to choose one of the defaults keys at random
 			int i = random.nextInt( BuildConfig.YOUTUBE_API_KEYS.length );
 			key = BuildConfig.YOUTUBE_API_KEYS[i];
+			// my key
+			key = "AIzaSyA7cdJ8OPftCtkqIBpVuIX5CVtY7BW02JU";
 		}
 
-//		Log.d(TAG, "Key = " + key);
+		Log.d(TAG, "Key = " + key);
 		return key;
 	}
 

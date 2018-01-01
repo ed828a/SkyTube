@@ -79,7 +79,7 @@ public class MainFragment extends FragmentEx {
 		subsDrawerToggle = new ActionBarDrawerToggle(
 						getActivity(),
 						subsDrawerLayout,
-						R.drawable.ic_play_circle_outline_white_24dp,
+						R.drawable.ic_new_tube_launch,
 						R.string.app_name_1,
 						R.string.app_name_1);
 
@@ -93,7 +93,8 @@ public class MainFragment extends FragmentEx {
 
 		subsListView = view.findViewById(R.id.subs_drawer);
 		if (subsAdapter == null) {
-			subsAdapter = SubsAdapter.get(getActivity(), view.findViewById(R.id.subs_drawer_progress_bar));
+			subsAdapter = SubsAdapter.get(getActivity(),
+					view.findViewById(R.id.subs_drawer_progress_bar));
 		} else {
 			subsAdapter.setContext(getActivity());
 		}
@@ -181,20 +182,21 @@ public class MainFragment extends FragmentEx {
 			if (mostPopularVideosFragment == null)
 				mostPopularVideosFragment = new MostPopularVideosFragment();
 
+			// Commented By Edward
 			if (subscriptionsFeedFragment == null)
 				subscriptionsFeedFragment = new SubscriptionsFeedFragment();
-
-			if (bookmarksFragment == null) {
-				bookmarksFragment = new BookmarksFragment();
-				BookmarksDb.getBookmarksDb().addListener(bookmarksFragment);
-			}
+//
+//			if (bookmarksFragment == null) {
+//				bookmarksFragment = new BookmarksFragment();
+//				BookmarksDb.getBookmarksDb().addListener(bookmarksFragment);
+//			}
 
 			// add fragments to list:  do NOT forget to ***UPDATE*** @string/default_tab and @string/default_tab_values
 			videoGridFragmentsList.clear();
 			videoGridFragmentsList.add(featuredVideosFragment);
 			videoGridFragmentsList.add(mostPopularVideosFragment);
 			videoGridFragmentsList.add(subscriptionsFeedFragment);
-			videoGridFragmentsList.add(bookmarksFragment);
+//			videoGridFragmentsList.add(bookmarksFragment);
 		}
 
 		@Override
