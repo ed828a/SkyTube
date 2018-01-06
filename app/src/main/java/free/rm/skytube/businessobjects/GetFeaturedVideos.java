@@ -43,10 +43,17 @@ public class GetFeaturedVideos extends GetYouTubeVideos {
 				"snippet/thumbnails/high, contentDetails/duration, statistics)," +
 				"nextPageToken");
 		videosList.setKey(YouTubeAPIKey.get().getYouTubeAPIKey());
-		videosList.setChart("mostPopular");
+		videosList.setChart("mostPopular"); // this is the initialization of the first fetch
+
+		// for hard-code region testing
+//		String countryCode = getPreferredRegion();
+//		countryCode = "CN";
+//		videosList.setRegionCode(countryCode);
+
 		videosList.setRegionCode(getPreferredRegion());
 		videosList.setMaxResults(getMaxResults());
 		nextPageToken = null;
+		totalPages = 1;
 	}
 
 	@Override
@@ -67,12 +74,16 @@ public class GetFeaturedVideos extends GetYouTubeVideos {
 				// set the next page token
 				nextPageToken = response.getNextPageToken();
 
+				// record total pages
+				totalPages +=1;
 				// if nextPageToken is null, it means that there are no more videos
 				if (nextPageToken == null)
 					noMoreVideoPages = true;
 			} catch (IOException e) {
 				Log.e(TAG, "Error has occurred while getting Featured Videos.", e);
 			}
+		} else {
+			Log.v(TAG, "TotalPages = " + totalPages);
 		}
 
 		return toYouTubeVideoList(searchResultList);

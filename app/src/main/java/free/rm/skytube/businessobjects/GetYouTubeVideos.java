@@ -34,6 +34,7 @@ import free.rm.skytube.app.SkyTubeApp;
 public abstract class GetYouTubeVideos {
 	protected String nextPageToken = null;
 	protected boolean noMoreVideoPages = false;
+	protected int totalPages = 0;
 
 	/**
 	 * Initialise this object.
