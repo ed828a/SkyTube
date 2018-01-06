@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import free.rm.skytube.R;
 import free.rm.skytube.app.SkyTubeApp;
 import free.rm.skytube.businessobjects.VideoCategory;
-import free.rm.skytube.businessobjects.YouTubeChannel;
-import free.rm.skytube.gui.businessobjects.VideoGridAdapter;
+import free.rm.skytube.businessobjects.YouTube.POJOs.YouTubeChannel;
+import free.rm.skytube.gui.businessobjects.adapters.VideoGridAdapter;
 
 /**
  * A fragment that displays the videos belonging to a channel.

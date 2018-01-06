@@ -6,6 +6,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 	<application
 		android:name=".app.SkyTubeApp"
@@ -33,6 +34,7 @@
 			android:theme="@style/NoActionBarActivityTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
+
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
@@ -41,33 +43,39 @@
 			android:configChanges="orientation|keyboardHidden|screenSize"
 			android:theme="@style/VideoPlayerActivityTheme">
 			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.VIEW"/>
 
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
+				<category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
 
-				<data android:scheme="http" />
-				<data android:scheme="https" />
-
-				<data android:host="youtube.com" />
-				<data android:host="m.youtube.com" />
-				<data android:host="www.youtube.com" />
-				<data android:host="youtu.be" />
+				<data android:scheme="http"/>
+				<data android:scheme="https"/>
+				<data android:host="youtube.com"/>
+				<data android:host="m.youtube.com"/>
+				<data android:host="www.youtube.com"/>
+				<data android:host="youtu.be"/>
 			</intent-filter>
 		</activity>
 		<activity android:name=".gui.activities.PreferencesActivity"/>
+		<activity
+			android:name=".gui.activities.ThumbnailViewerActivity"
+			android:theme="@style/NoActionBarActivityTheme">
+		</activity>
 
-		<service android:name=".businessobjects.FeedUpdaterService" />
+		<service android:name=".businessobjects.FeedUpdaterService"/>
 
-		<receiver android:name=".businessobjects.FeedUpdaterSetupReceiver"
-				  android:enabled="true">
+		<receiver
+			android:name=".businessobjects.FeedUpdaterSetupReceiver"
+			android:enabled="true">
 			<intent-filter>
-				<action android:name="android.intent.action.BOOT_COMPLETED"></action>
+				<action android:name="android.intent.action.BOOT_COMPLETED"/>
 			</intent-filter>
 		</receiver>
-		<receiver android:name=".businessobjects.FeedUpdaterReceiver"
-				  android:enabled="true">
+		<receiver
+			android:name=".businessobjects.FeedUpdaterReceiver"
+			android:enabled="true">
 		</receiver>
+
 	</application>
 
 </manifest>

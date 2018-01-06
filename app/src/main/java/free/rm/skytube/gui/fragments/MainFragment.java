@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.LruCache;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -23,6 +24,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
+
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,14 +35,20 @@ import java.util.List;
 
 import free.rm.skytube.R;
 import free.rm.skytube.businessobjects.db.BookmarksDb;
+import free.rm.skytube.businessobjects.db.DownloadedVideosDb;
+import free.rm.skytube.businessobjects.Logger;
 import free.rm.skytube.gui.businessobjects.MainActivityListener;
-import free.rm.skytube.gui.businessobjects.SubsAdapter;
+
+import free.rm.skytube.gui.businessobjects.fragments.FragmentEx;
+import free.rm.skytube.gui.businessobjects.adapters.SubsAdapter;
 import free.rm.skytube.gui.businessobjects.fragments.FragmentEx;
 
 public class MainFragment extends FragmentEx {
 	private RecyclerView				subsListView = null;
 	private SubsAdapter					subsAdapter  = null;
 	private ActionBarDrawerToggle		subsDrawerToggle;
+	private TabLayout                   tabLayout = null;
+	private DrawerLayout 				subsDrawerLayout = null;
 
 	/** List of fragments that will be displayed as tabs. */
 	private List<VideosGridFragment>	videoGridFragmentsList = new ArrayList<>();
@@ -48,12 +56,33 @@ public class MainFragment extends FragmentEx {
 	private MostPopularVideosFragment	mostPopularVideosFragment = null;
 	private SubscriptionsFeedFragment   subscriptionsFeedFragment = null;
 	private BookmarksFragment			bookmarksFragment = null;
+	private DownloadedVideosFragment    downloadedVideosFragment = null;
+
+	// Constants for saving the state of this Fragment's child Fragments
+	public static final String FEATURED_VIDEOS_FRAGMENT = "MainFragment.featuredVideosFragment";
+	public static final String MOST_POPULAR_VIDEOS_FRAGMENT = "MainFragment.mostPopularVideosFragment";
+	public static final String SUBSCRIPTIONS_FEED_FRAGMENT = "MainFragment.subscriptionsFeedFragment";
+	public static final String BOOKMARKS_FRAGMENT = "MainFragment.bookmarksFragment";
+	public static final String DOWNLOADED_VIDEOS_FRAGMENT = "MainFragment.downloadedVideosFragment";
 
 	private VideosPagerAdapter			videosPagerAdapter = null;
 	private ViewPager					viewPager;
 
 	public static final String SHOULD_SELECTED_FEED_TAB = "MainFragment.SHOULD_SELECTED_FEED_TAB";
 
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		if(savedInstanceState != null) {
+			featuredVideosFragment = (FeaturedVideosFragment) getChildFragmentManager().getFragment(savedInstanceState, FEATURED_VIDEOS_FRAGMENT);
+			mostPopularVideosFragment = (MostPopularVideosFragment) getChildFragmentManager().getFragment(savedInstanceState, MOST_POPULAR_VIDEOS_FRAGMENT);
+			subscriptionsFeedFragment = (SubscriptionsFeedFragment)getChildFragmentManager().getFragment(savedInstanceState, SUBSCRIPTIONS_FEED_FRAGMENT);
+			bookmarksFragment = (BookmarksFragment) getChildFragmentManager().getFragment(savedInstanceState, BOOKMARKS_FRAGMENT);
+			downloadedVideosFragment = (DownloadedVideosFragment) getChildFragmentManager().getFragment(savedInstanceState, DOWNLOADED_VIDEOS_FRAGMENT);
+		}
+	}
 
 	@Nullable
 	@Override
@@ -75,7 +104,7 @@ public class MainFragment extends FragmentEx {
 		// indicate that this fragment has an action bar menu
 		setHasOptionsMenu(true);
 
-		final DrawerLayout subsDrawerLayout = view.findViewById(R.id.subs_drawer_layout);
+		subsDrawerLayout = view.findViewById(R.id.subs_drawer_layout);
 		subsDrawerToggle = new ActionBarDrawerToggle(
 						getActivity(),
 						subsDrawerLayout,
@@ -105,10 +134,10 @@ public class MainFragment extends FragmentEx {
 
 		videosPagerAdapter = new VideosPagerAdapter(getChildFragmentManager());
 		viewPager = view.findViewById(R.id.pager);
-		viewPager.setOffscreenPageLimit(3);
+		viewPager.setOffscreenPageLimit(videoGridFragmentsList.size() - 1);
 		viewPager.setAdapter(videosPagerAdapter);
 
-		TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+		tabLayout = view.findViewById(R.id.tab_layout);
 		tabLayout.setupWithViewPager(viewPager);
 
 		tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -157,6 +186,19 @@ public class MainFragment extends FragmentEx {
 
 
 	@Override
+	public void onResume() {
+		super.onResume();
+
+		// when the MainFragment is resumed (e.g. after Preferences is minimized), inform the
+		// current fragment that it is selected.
+		if (videoGridFragmentsList != null  &&  tabLayout != null) {
+			Logger.d(this, "MAINFRAGMENT RESUMED " + tabLayout.getSelectedTabPosition());
+			videoGridFragmentsList.get(tabLayout.getSelectedTabPosition()).onFragmentSelected();
+		}
+	}
+
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Pass the event to ActionBarDrawerToggle, if it returns true, then it has handled the app
 		// icon touch event
@@ -191,12 +233,18 @@ public class MainFragment extends FragmentEx {
 //				BookmarksDb.getBookmarksDb().addListener(bookmarksFragment);
 //			}
 
+			if(downloadedVideosFragment == null) {
+				downloadedVideosFragment = new DownloadedVideosFragment();
+				DownloadedVideosDb.getVideoDownloadsDb().setListener(downloadedVideosFragment);
+			}
+
 			// add fragments to list:  do NOT forget to ***UPDATE*** @string/default_tab and @string/default_tab_values
 			videoGridFragmentsList.clear();
 			videoGridFragmentsList.add(featuredVideosFragment);
 			videoGridFragmentsList.add(mostPopularVideosFragment);
 			videoGridFragmentsList.add(subscriptionsFeedFragment);
 //			videoGridFragmentsList.add(bookmarksFragment);
+			videoGridFragmentsList.add(downloadedVideosFragment);
 		}
 
 		@Override
@@ -216,6 +264,36 @@ public class MainFragment extends FragmentEx {
 
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if(featuredVideosFragment != null)
+			getChildFragmentManager().putFragment(outState, FEATURED_VIDEOS_FRAGMENT, featuredVideosFragment);
+		if(mostPopularVideosFragment != null)
+			getChildFragmentManager().putFragment(outState, MOST_POPULAR_VIDEOS_FRAGMENT, mostPopularVideosFragment);
+		if(subscriptionsFeedFragment != null)
+			getChildFragmentManager().putFragment(outState, SUBSCRIPTIONS_FEED_FRAGMENT, subscriptionsFeedFragment);
+		if(bookmarksFragment != null)
+			getChildFragmentManager().putFragment(outState, BOOKMARKS_FRAGMENT, bookmarksFragment);
+		if(downloadedVideosFragment != null)
+			getChildFragmentManager().putFragment(outState, DOWNLOADED_VIDEOS_FRAGMENT, downloadedVideosFragment);
+
+		super.onSaveInstanceState(outState);
+	}
+
+	/**
+	 * Returns true if the subscriptions drawer is opened.
+	 */
+	public boolean isDrawerOpen() {
+		return subsDrawerLayout.isDrawerOpen(GravityCompat.START);
+	}
+
+
+	/**
+	 * Close the subscriptions drawer.
+	 */
+	public void closeDrawer() {
+		subsDrawerLayout.closeDrawer(GravityCompat.START);
+	}
 }
 
 class TypefaceSpan extends MetricAffectingSpan {
