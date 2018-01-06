@@ -13,11 +13,11 @@ import butterknife.ButterKnife;
 import free.rm.skytube.R;
 import free.rm.skytube.app.SkyTubeApp;
 import free.rm.skytube.businessobjects.VideoCategory;
-import free.rm.skytube.businessobjects.YouTubeChannel;
-import free.rm.skytube.businessobjects.YouTubePlaylist;
+import free.rm.skytube.businessobjects.YouTube.POJOs.YouTubeChannel;
+import free.rm.skytube.businessobjects.YouTube.POJOs.YouTubePlaylist;
 import free.rm.skytube.gui.businessobjects.MainActivityListener;
 import free.rm.skytube.gui.businessobjects.PlaylistClickListener;
-import free.rm.skytube.gui.businessobjects.PlaylistsGridAdapter;
+import free.rm.skytube.gui.businessobjects.adapters.PlaylistsGridAdapter;
 
 /**
  * A fragment that displays the Playlists belonging to a Channel
@@ -52,7 +52,7 @@ public class ChannelPlaylistsFragment extends VideosGridFragment implements Play
 		playlistsGridAdapter.setYouTubeChannel(channel);
 
 
-		gridView.setHasFixedSize(false);
+		gridView.setHasFixedSize(true);
 		gridView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.video_grid_num_columns)));
 		gridView.setAdapter(playlistsGridAdapter);
 

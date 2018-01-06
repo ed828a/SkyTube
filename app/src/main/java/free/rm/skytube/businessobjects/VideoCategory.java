@@ -17,6 +17,16 @@
 
 package free.rm.skytube.businessobjects;
 
+import free.rm.skytube.businessobjects.YouTube.GetBookmarksVideos;
+import free.rm.skytube.businessobjects.YouTube.GetChannelVideos;
+import free.rm.skytube.businessobjects.YouTube.GetDownloadedVideos;
+import free.rm.skytube.businessobjects.YouTube.GetFeaturedVideos;
+import free.rm.skytube.businessobjects.YouTube.GetMostPopularVideos;
+import free.rm.skytube.businessobjects.YouTube.GetPlaylistVideos;
+import free.rm.skytube.businessobjects.YouTube.GetYouTubeVideoBySearch;
+import free.rm.skytube.businessobjects.YouTube.GetYouTubeVideos;
+import free.rm.skytube.businessobjects.db.Tasks.GetSubscriptionsVideosFromDb;
+
 /**
  * Represents a video category/group.
  */
@@ -34,7 +44,9 @@ public enum VideoCategory {
 	/** Videos bookmarked by the user */
 	BOOKMARKS_VIDEOS (5),
 	/** Videos belonging to a playlist */
-	PLAYLIST_VIDEOS (7);
+	PLAYLIST_VIDEOS (7),
+	/** Videos that have been downloaded */
+	DOWNLOADED_VIDEOS (8);
 
 	// *****************
 	// DON'T FORGET to update #createGetYouTubeVideos() methods...
@@ -63,13 +75,15 @@ public enum VideoCategory {
 		else if (id == CHANNEL_VIDEOS.id)
 			return new GetChannelVideos();
 		else if (id == SUBSCRIPTIONS_FEED_VIDEOS.id)
-			return new GetSubscriptionsVideos();
+			return new GetSubscriptionsVideosFromDb();
 		else if (id == BOOKMARKS_VIDEOS.id)
 			return new GetBookmarksVideos();
 		else if (id == PLAYLIST_VIDEOS.id)
 			return new GetPlaylistVideos();
+		else if (id == DOWNLOADED_VIDEOS.id)
+			return new GetDownloadedVideos();
 
-		// this will notify the developer is he forgot to amend this method when a new type is added
+		// this will notify the developer that he forgot to edit this method when a new type is added
 		throw new UnsupportedOperationException();
 	}
 

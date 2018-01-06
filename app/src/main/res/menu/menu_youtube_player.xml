@@ -27,4 +27,11 @@
 	      android:title="@string/unbookmark"
 	      app:showAsAction="never"/>
 
+	<item android:id="@+id/view_thumbnail"
+	      android:title="@string/view_thumbnail"
+	      app:showAsAction="never"/>
+
+	<item android:id="@+id/download_video"
+		  android:title="@string/download_video"
+		  app:showAsAction="never"/>
 </menu>

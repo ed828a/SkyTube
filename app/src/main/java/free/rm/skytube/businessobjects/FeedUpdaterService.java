@@ -14,8 +14,11 @@ import java.util.List;
 
 import free.rm.skytube.R;
 import free.rm.skytube.app.SkyTubeApp;
+import free.rm.skytube.businessobjects.YouTube.POJOs.YouTubeChannel;
+import free.rm.skytube.businessobjects.YouTube.POJOs.YouTubeVideo;
+import free.rm.skytube.businessobjects.YouTube.Tasks.GetSubscriptionVideosTask;
 import free.rm.skytube.gui.activities.MainActivity;
-import free.rm.skytube.gui.businessobjects.GetSubscriptionVideosTaskListener;
+import free.rm.skytube.businessobjects.YouTube.Tasks.GetSubscriptionVideosTaskListener;
 
 /**
  * A Service to automatically refresh the Subscriptions Database for Subscribed Channels. If any new videos have been found,
@@ -24,6 +27,8 @@ import free.rm.skytube.gui.businessobjects.GetSubscriptionVideosTaskListener;
 public class FeedUpdaterService extends Service implements GetSubscriptionVideosTaskListener {
 	private GetSubscriptionVideosTask getSubscriptionVideosTask;
 	private List<YouTubeVideo> newVideosFetched;
+
+	public static final String NEW_SUBSCRIPTION_VIDEOS_FOUND = "FeedUpdaterService.NEW_SUBSCRIPTION_VIDEOS_FOUND";
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -67,6 +72,11 @@ public class FeedUpdaterService extends Service implements GetSubscriptionVideos
 
 			NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 			notificationManager.notify(SkyTubeApp.NEW_VIDEOS_NOTIFICATION_CHANNEL_ID, notification);
+
+			// Send a broadcast that new subscription videos have been found. The feed tab will receive the broadcast and
+			// refresh its video grid to show the new videos.
+			Intent feedTabIntent = new Intent(NEW_SUBSCRIPTION_VIDEOS_FOUND);
+			sendBroadcast(feedTabIntent);
 		}
 	}
 }
