@@ -70,7 +70,6 @@ public class ParseStreamMetaData {
 
 		try {
 			StreamingService youtube = NewPipe.getService("YouTube");
-			// Fixed by Edward
 			StreamExtractor  extractor = youtube.getStreamExtractor(youtubeVideoUrl);
 
 			// actual extraction
