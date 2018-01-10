@@ -25,7 +25,6 @@ public class ChannelVideosFragment extends VideosGridFragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// get the channel
 		channel = (YouTubeChannel)getArguments().getSerializable(ChannelBrowserFragment.CHANNEL_OBJ);
-//		getArguments().putSerializable(ChannelBrowserFragment.CHANNEL_OBJ, null);  // need to be deleted
 
 		// create and return the view
 		View view =  super.onCreateView(inflater, container, savedInstanceState);

@@ -22,6 +22,7 @@ import android.net.Uri;
 
 import org.schabi.newpipe.extractor.stream.VideoStream;
 
+
 /**
  * Represents the meta-data of a YouTube video stream.
  */

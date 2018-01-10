@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -12,11 +13,13 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.util.LruCache;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+//import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,29 +27,28 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
-
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import free.rm.skytube.R;
+
+import free.rm.skytube.businessobjects.Logger;
 import free.rm.skytube.businessobjects.db.BookmarksDb;
 import free.rm.skytube.businessobjects.db.DownloadedVideosDb;
-import free.rm.skytube.businessobjects.Logger;
 import free.rm.skytube.gui.businessobjects.MainActivityListener;
-
-import free.rm.skytube.gui.businessobjects.fragments.FragmentEx;
 import free.rm.skytube.gui.businessobjects.adapters.SubsAdapter;
 import free.rm.skytube.gui.businessobjects.fragments.FragmentEx;
 
 public class MainFragment extends FragmentEx {
 	private RecyclerView				subsListView = null;
 	private SubsAdapter					subsAdapter  = null;
-	private ActionBarDrawerToggle		subsDrawerToggle;
+	private ActionBarDrawerToggle subsDrawerToggle;
 	private TabLayout                   tabLayout = null;
 	private DrawerLayout 				subsDrawerLayout = null;
 
@@ -91,7 +93,12 @@ public class MainFragment extends FragmentEx {
 
 		// setup the toolbar / actionbar
 		Toolbar toolbar = view.findViewById(R.id.toolbar);
+
+		// Added by Edward not working
+//		toolbar.setNavigationIcon(R.drawable.ic_new_tube_launch);
+
 		setSupportActionBar(toolbar);
+
 
 		SpannableString title = new SpannableString("NewTube");
 		title.setSpan(new TypefaceSpan(getContext(), "JLSDataGothicC_NC.otf"),
@@ -112,8 +119,29 @@ public class MainFragment extends FragmentEx {
 						R.string.app_name_1,
 						R.string.app_name_1);
 
-
 		subsDrawerToggle.setDrawerIndicatorEnabled(true);
+
+		// Code not working
+//		subsDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_new_tube_launch);
+
+//		// added by Edward
+//		subsDrawerToggle.setDrawerIndicatorEnabled(false);
+//		Drawable drawable = ResourcesCompat.getDrawable(getResources(),
+//				R.drawable.ic_new_tube_launch, getActivity().getTheme());
+//		subsDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_new_tube_launch);
+//		subsDrawerToggle.setHomeAsUpIndicator(drawable);
+//		subsDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener(){
+//			@Override
+//			public void onClick(View view) {
+//				Toast.makeText(getContext(),
+//						"ToolBarNavigation Indicator clicked.", Toast.LENGTH_SHORT);
+//				if (subsDrawerLayout.isDrawerVisible(GravityCompat.START)){
+//					subsDrawerLayout.closeDrawer(GravityCompat.START);
+//				} else {
+//					subsDrawerLayout.openDrawer(GravityCompat.START);
+//				}
+//			}
+//		});
 
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
@@ -227,11 +255,11 @@ public class MainFragment extends FragmentEx {
 			// Commented By Edward
 			if (subscriptionsFeedFragment == null)
 				subscriptionsFeedFragment = new SubscriptionsFeedFragment();
-//
-//			if (bookmarksFragment == null) {
-//				bookmarksFragment = new BookmarksFragment();
-//				BookmarksDb.getBookmarksDb().addListener(bookmarksFragment);
-//			}
+
+			if (bookmarksFragment == null) {
+				bookmarksFragment = new BookmarksFragment();
+				BookmarksDb.getBookmarksDb().addListener(bookmarksFragment);
+			}
 
 			if(downloadedVideosFragment == null) {
 				downloadedVideosFragment = new DownloadedVideosFragment();
@@ -243,7 +271,7 @@ public class MainFragment extends FragmentEx {
 			videoGridFragmentsList.add(featuredVideosFragment);
 			videoGridFragmentsList.add(mostPopularVideosFragment);
 			videoGridFragmentsList.add(subscriptionsFeedFragment);
-//			videoGridFragmentsList.add(bookmarksFragment);
+			videoGridFragmentsList.add(bookmarksFragment);
 			videoGridFragmentsList.add(downloadedVideosFragment);
 		}
 
