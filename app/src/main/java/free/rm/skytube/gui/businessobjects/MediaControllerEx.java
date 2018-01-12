@@ -18,8 +18,10 @@
 package free.rm.skytube.gui.businessobjects;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 /**
@@ -33,7 +35,6 @@ public class MediaControllerEx extends MediaController {
 	private VideoView   videoView;
 	private boolean     hideController = false;
 
-
 	/**
 	 * Initialises this object.  It also attaches the supplied VideoView with this MediaController.
 	 *
@@ -44,6 +45,8 @@ public class MediaControllerEx extends MediaController {
 		super(activity);
 		this.videoView = videoView;
 		this.videoView.setMediaController(this);
+
+		setAlpha(0.3f);
 	}
 
 
