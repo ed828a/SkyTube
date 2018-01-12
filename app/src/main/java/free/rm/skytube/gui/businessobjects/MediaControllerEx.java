@@ -46,6 +46,7 @@ public class MediaControllerEx extends MediaController {
 		this.videoView = videoView;
 		this.videoView.setMediaController(this);
 
+		setAnchorView(videoView);
 		setAlpha(0.3f);
 	}
 
